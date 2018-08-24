@@ -14,13 +14,14 @@ namespace CPE200Lab1
     public partial class Form1 : Form
     {
 
-        float ans;
+        float ans,num2;
         char operate; //store previous operator 
         char operate_2; //store current operator
         bool firstDigit = true;
         bool answer = false;
         bool percent_clicked = false;
         bool operate_clicked = false;
+        bool equalFirstTime = false;
 
         public Form1()
         {
@@ -33,15 +34,13 @@ namespace CPE200Lab1
             if ((lblDisplay.Text == "0" || lblDisplay.Text == "Error" || firstDigit)){
                 lblDisplay.Text = string.Empty;
                 firstDigit = false;
-
+                equalFirstTime = false;
             }
 
             if (lblDisplay.Text.Length < 8)
             {
                 lblDisplay.Text = lblDisplay.Text + text.Text;
             }
-            
-
         }
 
         private void btnOperator_Click(object sender, EventArgs e)
@@ -50,6 +49,7 @@ namespace CPE200Lab1
             operate_2 = Convert.ToChar(text.Text);
             if (operate_clicked)
             {
+                num2 = float.Parse(lblDisplay.Text);
                 calculate();
                 operate = operate_2;
             }
@@ -98,34 +98,34 @@ namespace CPE200Lab1
                 case '+':
                     if (percent_clicked)
                     {
-                        ans = ans + (float.Parse(lblDisplay.Text) * ans / 100);
+                        ans = ans + (num2 * ans / 100);
                         percent_clicked = false;
                     }
                     else
                     {
-                        ans = ans + float.Parse(lblDisplay.Text);
+                        ans = ans + num2;
                     }
                     break;
                 case '-':
                     if (percent_clicked)
                     {
-                        ans = ans - (float.Parse(lblDisplay.Text) * ans / 100);
+                        ans = ans - (num2 * ans / 100);
                         percent_clicked = false;
                     }
                     else
                     {
-                        ans = ans - float.Parse(lblDisplay.Text);
+                        ans = ans - num2;
                     }
                     break;
                 case 'X':
                     if (percent_clicked)
                     {
-                        ans = ans * (float.Parse(lblDisplay.Text) * ans / 100);
+                        ans = ans * (num2 * ans / 100);
                         percent_clicked = false;
                     }
                     else
                     {
-                        ans = ans * float.Parse(lblDisplay.Text);
+                        ans = ans * num2;
                     }
                     break;
                 case '÷':
@@ -137,12 +137,12 @@ namespace CPE200Lab1
                     {
                         if (percent_clicked)
                         {
-                            ans = ans / (float.Parse(lblDisplay.Text) * ans / 100);
+                            ans = ans / (num2 * ans / 100);
                             percent_clicked = false;
                         }
                         else
                         {
-                            ans = ans / float.Parse(lblDisplay.Text);
+                            ans = ans / num2;
                         }
                     }
                     break;
@@ -155,13 +155,21 @@ namespace CPE200Lab1
 
         private void btnEqual_Click(object sender, EventArgs e)
         {
-            calculate();
-            ans = 0;
+            if (!equalFirstTime)
+            {
+                num2 = float.Parse(lblDisplay.Text);
+            }
+            equalFirstTime = true;
+            calculate(); 
             firstDigit = true;
             answer = true;
             operate_clicked = false;
         }
 
-      
+        private void btnSign_Click(object sender, EventArgs e)
+        {
+            float tmp = float.Parse(lblDisplay.Text) * -1;
+            lblDisplay.Text = tmp.ToString();
+        }
     }
 }
